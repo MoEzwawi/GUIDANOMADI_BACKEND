@@ -4,4 +4,4 @@ Back-end project for digital nomads real estate app
 
 er_diagram
 
-![er_guidanomadi1_sec_agg](https://github.com/MoEzwawi/GUIDANOMADI_BACKEND/assets/142166624/496edf0d-0f0f-4ec1-8b8d-d8766d9fff9d)
+![er_guidanomadi1_ultimo_aggiornamento](https://github.com/MoEzwawi/GUIDANOMADI_BACKEND/assets/142166624/065b61ae-5f54-42e4-83cc-e06da32b4e7d)

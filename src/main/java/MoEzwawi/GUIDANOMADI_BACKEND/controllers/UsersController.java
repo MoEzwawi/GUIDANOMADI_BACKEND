@@ -34,7 +34,7 @@ public class UsersController {
         return currentUser;
     }
     @PostMapping("/me/upload")
-    public String uploadAvatar(@AuthenticationPrincipal User currentUser, @RequestParam("image") MultipartFile image) throws IOException {
-        return this.usersService.uploadAvatar(currentUser.getId(),image);
+    public String uploadProfilePic(@AuthenticationPrincipal User currentUser, @RequestParam("profilePic") MultipartFile profilePic) throws IOException {
+        return this.usersService.uploadAvatar(currentUser.getId(),profilePic);
     }
 }

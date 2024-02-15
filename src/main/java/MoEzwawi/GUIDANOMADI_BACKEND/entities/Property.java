@@ -4,6 +4,7 @@ import MoEzwawi.GUIDANOMADI_BACKEND.entities.enums.ListingType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 @Table(name = "properties")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Property {
     @Id
     @GeneratedValue
@@ -38,8 +40,15 @@ public class Property {
     private Double price;
     @Column(name = "available_from")
     private LocalDate availableFrom;
-    private String address;
+    @ManyToOne
+    @JoinColumn(name = "address_id")
+    private Address address;
     @ManyToOne
     @JoinColumn(name = "listed_by_id")
     private User listedBy;
+    public Property(ListingType listingType, Address address, User listedBy) {
+        this.listingType = listingType;
+        this.address = address;
+        this.listedBy = listedBy;
+    }
 }

@@ -2,6 +2,7 @@ package MoEzwawi.GUIDANOMADI_BACKEND.services;
 
 import MoEzwawi.GUIDANOMADI_BACKEND.entities.Address;
 import MoEzwawi.GUIDANOMADI_BACKEND.entities.Property;
+import MoEzwawi.GUIDANOMADI_BACKEND.entities.Image;
 import MoEzwawi.GUIDANOMADI_BACKEND.entities.User;
 import MoEzwawi.GUIDANOMADI_BACKEND.exceptions.NotFoundException;
 import MoEzwawi.GUIDANOMADI_BACKEND.payloads.properties.NewPropertyDTO;
@@ -15,6 +16,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 
 @Service
@@ -23,6 +27,8 @@ public class PropertyService {
     private PropertyRepository propertyRepository;
     @Autowired
     private AddressService addressService;
+    @Autowired
+    private ImageService imageService;
     public Page<Property> getAllProperties(int page, int size, String orderBy) {
         if (size >= 100) size = 100;
         Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
@@ -34,11 +40,11 @@ public class PropertyService {
     }
     public Page<Property> getPropertiesByCountry(int page, int size, String orderBy, String country){
         Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
-        return this.propertyRepository.findByCountry(country,pageable);
+        return this.propertyRepository.findByAddress_Country(country,pageable);
     }
     public Page<Property> getPropertiesByCity(int page, int size, String orderBy, String city){
         Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
-        return this.propertyRepository.findByCity(city,pageable);
+        return this.propertyRepository.findByAddress_City(city,pageable);
     }
     public NewPropertyResponseDTO saveNewProperty(NewPropertyDTO body, User currentUser){
         Address propertyAddress = this.addressService.save(body.street(),
@@ -71,5 +77,15 @@ public class PropertyService {
     public void findByIdAndDelete(Long id){
         Property found = this.findById(id);
         this.propertyRepository.delete(found);
+    }
+    public Image uploadImage(Long id , MultipartFile file) throws IOException {
+        Property found = this.findById(id);
+        return this.imageService.save(found,file);
+    }
+    public Image uploadImage(Long id , String url) {
+        Property found = this.findById(id);
+        return this.imageService.save(found,url);
+    }
+    public Image uploadThumbnail(Long id, MultipartFile file){
     }
 }

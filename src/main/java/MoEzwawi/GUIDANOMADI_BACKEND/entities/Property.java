@@ -28,12 +28,13 @@ public class Property {
     @Column(name = "why_is_perfect",length = 500)
     private String whyIsPerfect;
     @Column(name = "room_count")
-    private Integer roomCount;
+    private Integer numberOfRooms;
     @Column(name = "size_sq_meters")
     private Integer sizeSqMeters;
-    private Integer floor;
+    @Column(name = "floor")
+    private Integer floorNumber;
     @Column(name = "toilet_count")
-    private Integer toiletCount;
+    private Integer numberOfToilets;
     @Column(name = "listing_type")
     @Enumerated(EnumType.STRING)
     private ListingType listingType;

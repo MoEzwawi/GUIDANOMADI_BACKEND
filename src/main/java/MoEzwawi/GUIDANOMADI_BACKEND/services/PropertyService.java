@@ -28,6 +28,18 @@ public class PropertyService {
         Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
         return this.propertyRepository.findAll(pageable);
     }
+    public Page<Property> getPropertiesByOwner(int page, int size, String orderBy, User owner){
+        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
+        return this.propertyRepository.findByUser(owner,pageable);
+    }
+    public Page<Property> getPropertiesByCountry(int page, int size, String orderBy, String country){
+        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
+        return this.propertyRepository.findByCountry(country,pageable);
+    }
+    public Page<Property> getPropertiesByCity(int page, int size, String orderBy, String city){
+        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
+        return this.propertyRepository.findByCity(city,pageable);
+    }
     public NewPropertyResponseDTO saveNewProperty(NewPropertyDTO body, User currentUser){
         Address propertyAddress = this.addressService.save(body.street(),
                 body.streetNumber(), body.zipCode(), body.city(),
@@ -55,5 +67,9 @@ public class PropertyService {
         Property found = this.findById(id);
         this.addressService.findByIdAndUpdate(found.getId(), body);
         return found;
+    }
+    public void findByIdAndDelete(Long id){
+        Property found = this.findById(id);
+        this.propertyRepository.delete(found);
     }
 }

@@ -34,7 +34,7 @@ public class UsersService {
         return this.usersRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("No user found for email " + email));
     }
     public String uploadAvatar(UUID id,MultipartFile file) throws IOException {
-        String url = (String) cloudinary.uploader()
+        String url = (String) this.cloudinary.uploader()
                 .upload(file.getBytes(), ObjectUtils.emptyMap())
                 .get("url");
         User found = this.findById(id);

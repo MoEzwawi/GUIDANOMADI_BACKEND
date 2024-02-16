@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 
 @Service
@@ -56,6 +57,14 @@ public class PropertyService {
     public Property findById(Long id){
         return this.propertyRepository.findById(id).orElseThrow(()->new NotFoundException(id));
     }
+    public Image getPropertyThumbnail(Long id){
+        Property found = this.findById(id);
+        return this.imageService.findThumbnail(found);
+    }
+    public List<Image> getPropertyImages(Long id){
+        Property found = this.findById(id);
+        return this.imageService.findByProperty(found);
+    }
     public Property findByIdAndUpdate(Long id, UpdatePropertyDTO body){
         Property found = this.findById(id);
         if (body.title() != null) found.setTitle(body.title());
@@ -71,7 +80,7 @@ public class PropertyService {
     }
     public Property findByIdAndUpdateAddress(Long id,UpdateAddressDTO body){
         Property found = this.findById(id);
-        this.addressService.findByIdAndUpdate(found.getId(), body);
+        this.addressService.findByIdAndUpdate(found.getAddress().getId(), body);
         return found;
     }
     public void findByIdAndDelete(Long id){
@@ -86,6 +95,12 @@ public class PropertyService {
         Property found = this.findById(id);
         return this.imageService.save(found,url);
     }
-    public Image uploadThumbnail(Long id, MultipartFile file){
+    public Image uploadThumbnail(Long id, MultipartFile file) throws IOException {
+        Property found = this.findById(id);
+        return this.imageService.uploadThumbnail(found,file);
+    }
+    public Image updateThumbnail(Long propertyId, Long imageId){
+        Property found = this.findById(propertyId);
+        return this.imageService.setImageAsNewThumbnail(found, imageId);
     }
 }

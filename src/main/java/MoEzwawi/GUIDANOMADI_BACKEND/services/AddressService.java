@@ -36,4 +36,8 @@ public class AddressService {
         if (body.country() != null) found.setCountry(body.country());
         this.addressRepository.save(found);
     }
+    public void findByIdAndDelete(Long id){
+        Address found = this.findById(id);
+        this.addressRepository.delete(found);
+    }
 }

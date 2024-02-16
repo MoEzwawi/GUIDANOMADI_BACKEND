@@ -41,9 +41,30 @@ public class ImageService {
     public Image save(Property property, String url){
         return this.imageRepository.save(new Image(property,url));
     }
-    public Image uploadThumbnail(Property property, MultipartFile file){
+/*    public Image uploadFirstThumbnail(Property property, MultipartFile file) throws IOException {
+        Image firstThumbnail = this.save(property,file);
+        firstThumbnail.setThumbnail();
+        return this.imageRepository.save(firstThumbnail);
+    }*/
+    public Image uploadThumbnail(Property property, MultipartFile file) throws IOException {
         Image oldThumbnail = this.findThumbnail(property);
-        oldThumbnail.setNotThumbnail();
-        this.imageRepository.save(oldThumbnail);
+        if(oldThumbnail != null){
+            oldThumbnail.setNotThumbnail();
+            this.imageRepository.save(oldThumbnail);
+        }
+        String newUrl = this.uploadImage(file);
+        Image newThumbnail = new Image(property,newUrl);
+        newThumbnail.setThumbnail();
+        return this.imageRepository.save(newThumbnail);
+    }
+    public Image setImageAsNewThumbnail(Property property, Long imageId){
+        Image oldThumbnail = this.findThumbnail(property);
+        if(oldThumbnail != null){
+            oldThumbnail.setNotThumbnail();
+            this.imageRepository.save(oldThumbnail);
+        }
+        Image newThumbnail = this.findById(imageId);
+        newThumbnail.setThumbnail();
+        return this.imageRepository.save(newThumbnail);
     }
 }

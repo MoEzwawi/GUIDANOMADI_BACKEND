@@ -41,7 +41,7 @@ public class Property {
     private Double price;
     @Column(name = "available_from")
     private LocalDate availableFrom;
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "address_id")
     private Address address;
     @ManyToOne

@@ -26,7 +26,7 @@ public class AddressService {
     public Address findById(Long id){
         return this.addressRepository.findById(id).orElseThrow(()->new NotFoundException(id));
     }
-    public void findByIdAndUpdate(Long id, UpdateAddressDTO body){
+    public Address findByIdAndUpdate(Long id, UpdateAddressDTO body){
         Address found = this.findById(id);
         if(body.street() != null) found.setStreet(body.street());
         if(body.streetNumber() != null) found.setStreetNumber(body.streetNumber());
@@ -34,7 +34,7 @@ public class AddressService {
         if(body.city() != null) found.setCity(body.city());
         if(body.provinceOrStateCode() != null) found.setProvinceOrStateCode(body.provinceOrStateCode());
         if (body.country() != null) found.setCountry(body.country());
-        this.addressRepository.save(found);
+        return this.addressRepository.save(found);
     }
     public void findByIdAndDelete(Long id){
         Address found = this.findById(id);

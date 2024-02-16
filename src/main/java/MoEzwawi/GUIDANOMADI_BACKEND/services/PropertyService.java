@@ -30,7 +30,7 @@ public class PropertyService {
     @Autowired
     private UsersService usersService;
     public Page<Property> getAllProperties(int page, int size, String orderBy) {
-        if (size >= 100) size = 100;
+        if (size > 100) size = 100;
         Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
         return this.propertyRepository.findAll(pageable);
     }
@@ -72,6 +72,10 @@ public class PropertyService {
     public Property findById(Long id){
         return this.propertyRepository.findById(id).orElseThrow(()->new NotFoundException(id));
     }
+    public Address findPropertyAddress(Long propertyId){
+        Property found = this.findById(propertyId);
+        return found.getAddress();
+    }
     public Image getPropertyThumbnail(Long id){
         Property found = this.findById(id);
         return this.imageService.findThumbnail(found);
@@ -93,10 +97,13 @@ public class PropertyService {
         if (body.availableFrom() != null) found.setAvailableFrom(body.availableFrom());
         return this.propertyRepository.save(found);
     }
-    public Property findByIdAndUpdateAddress(Long id,UpdateAddressDTO body){
+    public Address findByIdAndUpdateAddress(Long id,UpdateAddressDTO body){
         Property found = this.findById(id);
-        this.addressService.findByIdAndUpdate(found.getAddress().getId(), body);
-        return found;
+        return this.addressService.findByIdAndUpdate(found.getAddress().getId(), body);
+    }
+    public void findByIdAndDelete(Long id){
+        Property found = this.findById(id);
+        this.propertyRepository.delete(found);
     }
     public Favourite findPropertyByIdAndAddToFavourites(User currentUser, Long id){
         Property fav = this.findById(id);
@@ -105,10 +112,6 @@ public class PropertyService {
     public void findPropertyByIdAndRemoveFromFavourites(User currentUser, Long id){
         Property fav = this.findById(id);
         this.favouritesService.removeFromFavourites(currentUser,fav);
-    }
-    public void findByIdAndDelete(Long id){
-        Property found = this.findById(id);
-        this.propertyRepository.delete(found);
     }
     public Image uploadImage(Long id , MultipartFile file) throws IOException {
         Property found = this.findById(id);

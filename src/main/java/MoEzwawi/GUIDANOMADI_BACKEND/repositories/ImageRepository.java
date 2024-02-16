@@ -8,10 +8,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ImageRepository extends JpaRepository<Image,Long> {
     List<Image> findByProperty(Property property);
     @Query("SELECT i FROM Image i WHERE i.property = :property AND i.isThumbnail = true")
-    Image findPropertyThumbnail(@Param("property") Property property);
+    Optional<Image> findPropertyThumbnail(@Param("property") Property property);
 }

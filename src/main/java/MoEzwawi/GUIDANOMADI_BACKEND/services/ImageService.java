@@ -23,7 +23,7 @@ public class ImageService {
         return this.imageRepository.findById(id).orElseThrow(()-> new NotFoundException(id));
     }
     public Image findThumbnail(Property property){
-        return this.imageRepository.findPropertyThumbnail(property);
+        return this.imageRepository.findPropertyThumbnail(property).orElseThrow(()->new NotFoundException("Thumbnail not found for this property"));
     }
     public List<Image> findByProperty(Property property){
         return this.imageRepository.findByProperty(property);

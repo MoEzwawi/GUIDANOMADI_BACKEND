@@ -1,9 +1,6 @@
 package MoEzwawi.GUIDANOMADI_BACKEND.services;
 
-import MoEzwawi.GUIDANOMADI_BACKEND.entities.Address;
-import MoEzwawi.GUIDANOMADI_BACKEND.entities.Property;
-import MoEzwawi.GUIDANOMADI_BACKEND.entities.Image;
-import MoEzwawi.GUIDANOMADI_BACKEND.entities.User;
+import MoEzwawi.GUIDANOMADI_BACKEND.entities.*;
 import MoEzwawi.GUIDANOMADI_BACKEND.exceptions.NotFoundException;
 import MoEzwawi.GUIDANOMADI_BACKEND.payloads.properties.NewPropertyDTO;
 import MoEzwawi.GUIDANOMADI_BACKEND.payloads.properties.NewPropertyResponseDTO;
@@ -11,15 +8,13 @@ import MoEzwawi.GUIDANOMADI_BACKEND.payloads.properties.UpdateAddressDTO;
 import MoEzwawi.GUIDANOMADI_BACKEND.payloads.properties.UpdatePropertyDTO;
 import MoEzwawi.GUIDANOMADI_BACKEND.repositories.PropertyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -30,6 +25,10 @@ public class PropertyService {
     private AddressService addressService;
     @Autowired
     private ImageService imageService;
+    @Autowired
+    private FavouritesService favouritesService;
+    @Autowired
+    private UsersService usersService;
     public Page<Property> getAllProperties(int page, int size, String orderBy) {
         if (size >= 100) size = 100;
         Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
@@ -38,6 +37,22 @@ public class PropertyService {
     public Page<Property> getPropertiesByOwner(int page, int size, String orderBy, User owner){
         Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
         return this.propertyRepository.findByUser(owner,pageable);
+    }
+    public Page<Property> getPropertiesByOwner(int page, int size, String orderBy, UUID ownerId){
+        User owner = this.usersService.findById(ownerId);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
+        return this.propertyRepository.findByUser(owner,pageable);
+    }
+    public Page<Property> getFavouritePropertiesByUser(int page, int size, String orderBy, User user){
+        Page<Favourite> favPage = this.favouritesService.getMyFavourites(page, size, orderBy, user);
+        List<Property> propertyList = favPage.stream().map(Favourite::getProperty).toList();
+        return new PageImpl<>(propertyList, favPage.getPageable(), favPage.getTotalElements());
+    }
+    public Page<Property> getFavouritePropertiesByUser(int page, int size, String orderBy, UUID userId){
+        User user = this.usersService.findById(userId);
+        Page<Favourite> favPage = this.favouritesService.getMyFavourites(page, size, orderBy, user);
+        List<Property> propertyList = favPage.stream().map(Favourite::getProperty).toList();
+        return new PageImpl<>(propertyList, favPage.getPageable(), favPage.getTotalElements());
     }
     public Page<Property> getPropertiesByCountry(int page, int size, String orderBy, String country){
         Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
@@ -82,6 +97,10 @@ public class PropertyService {
         Property found = this.findById(id);
         this.addressService.findByIdAndUpdate(found.getAddress().getId(), body);
         return found;
+    }
+    public Favourite findPropertyByIdAndAddToFavourites(User currentUser, Long id){
+        Property fav = this.findById(id);
+        return this.favouritesService.addToFavourites(currentUser,fav);
     }
     public void findByIdAndDelete(Long id){
         Property found = this.findById(id);

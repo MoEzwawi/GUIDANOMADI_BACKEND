@@ -6,6 +6,7 @@ import MoEzwawi.GUIDANOMADI_BACKEND.entities.User;
 import MoEzwawi.GUIDANOMADI_BACKEND.payloads.users.UpdateEmailDTO;
 import MoEzwawi.GUIDANOMADI_BACKEND.payloads.users.UpdateNameAndSurnameDTO;
 import MoEzwawi.GUIDANOMADI_BACKEND.payloads.users.UpdatePasswordDTO;
+import MoEzwawi.GUIDANOMADI_BACKEND.services.AuthService;
 import MoEzwawi.GUIDANOMADI_BACKEND.services.FavouritesService;
 import MoEzwawi.GUIDANOMADI_BACKEND.services.PropertyService;
 import MoEzwawi.GUIDANOMADI_BACKEND.services.UsersService;
@@ -26,6 +27,8 @@ public class UsersController {
     private UsersService usersService;
     @Autowired
     private PropertyService propertyService;
+    @Autowired
+    private AuthService authService;
     @GetMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public Page<User> getAllUsers(@RequestParam(defaultValue = "0") int page,
@@ -84,7 +87,7 @@ public class UsersController {
     public Page<Property> getMyFavourites(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "createdAt") String orderBy,
+            @RequestParam(defaultValue = "id") String orderBy,
             @AuthenticationPrincipal User currentUser
     ){
         return this.propertyService.getFavouritePropertiesByUser(page, size, orderBy, currentUser);
@@ -96,6 +99,10 @@ public class UsersController {
     @PutMapping("/me/changeEmail")
     public User changeEmail(@AuthenticationPrincipal User currentUser, @RequestBody UpdateEmailDTO body){
         return this.usersService.changeEmail(currentUser, body);
+    }
+    @PutMapping("/me/changePassword")
+    public void changePassword(@AuthenticationPrincipal User currentUser, @RequestBody UpdatePasswordDTO body){
+        this.authService.changePassword(currentUser, body);
     }
     @PostMapping("/me/upload")
     public String uploadProfilePic(@AuthenticationPrincipal User currentUser, @RequestParam("profilePic") MultipartFile profilePic) throws IOException {

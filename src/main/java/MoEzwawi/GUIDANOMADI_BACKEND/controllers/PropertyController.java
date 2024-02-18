@@ -25,7 +25,7 @@ public class PropertyController {
     public Page<Property> getAllProperties(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "cretedAt") String orderBy
+            @RequestParam(defaultValue = "createdAt") String orderBy
     ){
         return this.propertyService.getAllProperties(page, size, orderBy);
     }
@@ -65,7 +65,7 @@ public class PropertyController {
     @PostMapping("/{id}/thumbnail")
     public Image uploadThumbnail(
             @PathVariable Long id,
-            @RequestBody MultipartFile file,
+            @RequestParam("thumbnail") MultipartFile file,
             @AuthenticationPrincipal User currentUser
     ) throws IOException {
         if (!this.propertyService.canIEditTheCurrentProperty(currentUser, id)){
@@ -143,7 +143,7 @@ public class PropertyController {
     @PostMapping("/{id}/uploadImgFile")
     public Image uploadImageFile(
             @PathVariable Long id,
-            @RequestBody MultipartFile file,
+            @RequestParam("image") MultipartFile file,
             @AuthenticationPrincipal User currentUser
     ) throws IOException {
         if (!this.propertyService.canIEditTheCurrentProperty(currentUser, id)){

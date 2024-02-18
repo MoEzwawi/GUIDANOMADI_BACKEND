@@ -47,10 +47,12 @@ public class ImageService {
         return this.imageRepository.save(firstThumbnail);
     }*/
     public Image uploadThumbnail(Property property, MultipartFile file) throws IOException {
-        Image oldThumbnail = this.findThumbnail(property);
-        if(oldThumbnail != null){
+        try {
+            Image oldThumbnail = this.findThumbnail(property);
             oldThumbnail.setNotThumbnail();
             this.imageRepository.save(oldThumbnail);
+        } catch (NotFoundException ex){
+            System.err.println(ex.getMessage());
         }
         String newUrl = this.uploadImage(file);
         Image newThumbnail = new Image(property,newUrl);

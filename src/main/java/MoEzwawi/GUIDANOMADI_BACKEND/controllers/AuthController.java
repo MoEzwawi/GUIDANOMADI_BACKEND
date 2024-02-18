@@ -36,8 +36,4 @@ public class AuthController {
                 accessToken
         );
     }
-    @PutMapping("/changePassword")
-    public void changePassword(@AuthenticationPrincipal User currentUser, @RequestBody UpdatePasswordDTO body){
-        this.authService.changePassword(currentUser, body);
-    }
 }

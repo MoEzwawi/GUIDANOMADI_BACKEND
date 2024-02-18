@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 
@@ -86,7 +87,7 @@ public class PropertyService {
     }
     public boolean canIEditTheCurrentProperty(User currentUser, Long id){
         Property found = this.findById(id);
-        return found.getListedBy() == currentUser;
+        return Objects.equals(found.getListedBy().getEmail(), currentUser.getEmail());
     }
     public Property findByIdAndUpdate(Long id, UpdatePropertyDTO body){
         Property found = this.findById(id);

@@ -12,9 +12,8 @@ public record UpdateAddressDTO(
         @Pattern(regexp = "\\d{5}(-\\d{4})?", message = "Invalid ZIP code")
         String zipCode,
         String city,
-        @NotBlank(message = "provinceOrStateCode is a required field")
-        @Pattern(regexp = "^[A-Z]{2}$", message = "Invalid state abbreviation")
-        String provinceOrStateCode,
+        @NotBlank(message = "provinceOrState is a required field")
+        String provinceOrState,
         String country
 ) {
 }

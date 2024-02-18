@@ -2,13 +2,11 @@ package MoEzwawi.GUIDANOMADI_BACKEND.controllers;
 
 import MoEzwawi.GUIDANOMADI_BACKEND.entities.User;
 import MoEzwawi.GUIDANOMADI_BACKEND.exceptions.BadRequestException;
-import MoEzwawi.GUIDANOMADI_BACKEND.payloads.users.NewUserDTO;
-import MoEzwawi.GUIDANOMADI_BACKEND.payloads.users.NewUserResponseDTO;
-import MoEzwawi.GUIDANOMADI_BACKEND.payloads.users.UserLoginDTO;
-import MoEzwawi.GUIDANOMADI_BACKEND.payloads.users.UserLoginResponseDTO;
+import MoEzwawi.GUIDANOMADI_BACKEND.payloads.users.*;
 import MoEzwawi.GUIDANOMADI_BACKEND.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -37,5 +35,9 @@ public class AuthController {
         return new UserLoginResponseDTO(
                 accessToken
         );
+    }
+    @PutMapping("/changePassword")
+    public void changePassword(@AuthenticationPrincipal User currentUser, @RequestBody UpdatePasswordDTO body){
+        this.authService.changePassword(currentUser, body);
     }
 }

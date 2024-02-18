@@ -5,6 +5,7 @@ import MoEzwawi.GUIDANOMADI_BACKEND.entities.enums.Role;
 import MoEzwawi.GUIDANOMADI_BACKEND.exceptions.BadRequestException;
 import MoEzwawi.GUIDANOMADI_BACKEND.exceptions.UnauthorizedException;
 import MoEzwawi.GUIDANOMADI_BACKEND.payloads.users.NewUserDTO;
+import MoEzwawi.GUIDANOMADI_BACKEND.payloads.users.UpdatePasswordDTO;
 import MoEzwawi.GUIDANOMADI_BACKEND.payloads.users.UserLoginDTO;
 import MoEzwawi.GUIDANOMADI_BACKEND.repositories.UsersRepository;
 import MoEzwawi.GUIDANOMADI_BACKEND.security.JWTTools;
@@ -22,7 +23,6 @@ public class AuthService {
     private PasswordEncoder bcrypt;
     @Autowired
     private JWTTools jwtTools;
-
     public User save(NewUserDTO body) {
         this.usersRepository.findByEmail(body.email()).ifPresent(user -> {
             throw new BadRequestException("The e-mail " + user.getEmail() + " is already in use!");
@@ -52,5 +52,9 @@ public class AuthService {
         } else {
             throw new UnauthorizedException("Wrong email or password");
         }
+    }
+    public void changePassword(User currentUser, UpdatePasswordDTO body){
+        currentUser.setPassword(bcrypt.encode(body.password()));
+        this.usersRepository.save(currentUser);
     }
 }

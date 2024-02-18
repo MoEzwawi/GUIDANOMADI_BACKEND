@@ -65,7 +65,7 @@ public class PropertyService {
     public NewPropertyResponseDTO saveNewProperty(NewPropertyDTO body, User currentUser){
         Address propertyAddress = this.addressService.save(body.street(),
                 body.streetNumber(), body.zipCode(), body.city(),
-                body.provinceOrStateCode(), body.country());
+                body.provinceOrState(), body.country());
         Property newProperty = this.propertyRepository.save(new Property(body.listingType(),propertyAddress,currentUser));
         return new NewPropertyResponseDTO(newProperty.getId());
     }

@@ -6,7 +6,6 @@ import MoEzwawi.GUIDANOMADI_BACKEND.exceptions.BadRequestException;
 import MoEzwawi.GUIDANOMADI_BACKEND.exceptions.NotFoundException;
 import MoEzwawi.GUIDANOMADI_BACKEND.payloads.users.UpdateEmailDTO;
 import MoEzwawi.GUIDANOMADI_BACKEND.payloads.users.UpdateNameAndSurnameDTO;
-import MoEzwawi.GUIDANOMADI_BACKEND.payloads.users.UpdatePasswordDTO;
 import MoEzwawi.GUIDANOMADI_BACKEND.repositories.UsersRepository;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
@@ -15,7 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,8 +24,6 @@ import java.util.UUID;
 public class UsersService {
     @Autowired
     private UsersRepository usersRepository;
-    @Autowired
-    private PasswordEncoder bcrypt;
     @Autowired
     private Cloudinary cloudinary;
     public Page<User> getAllUsers(int page, int size, String orderBy) {
@@ -52,10 +48,6 @@ public class UsersService {
         });
         currentUser.setEmail(body.email());
         return this.usersRepository.save(currentUser);
-    }
-    public void changePassword(User currentUser, UpdatePasswordDTO body){
-        currentUser.setPassword(bcrypt.encode(body.password()));
-        this.usersRepository.save(currentUser);
     }
     public User findByIdAndPromote(UUID id){
         User found = this.findById(id);

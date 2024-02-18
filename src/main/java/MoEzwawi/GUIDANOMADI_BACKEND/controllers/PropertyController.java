@@ -29,20 +29,20 @@ public class PropertyController {
     ){
         return this.propertyService.getAllProperties(page, size, orderBy);
     }
-    @GetMapping
+    @GetMapping("/byCountry")
     public Page<Property> getPropertiesByCountry(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "cretedAt") String orderBy,
+            @RequestParam(defaultValue = "createdAt") String orderBy,
             @RequestParam String country
     ){
         return this.propertyService.getPropertiesByCountry(page, size, orderBy, country);
     }
-    @GetMapping
+    @GetMapping("/byCity")
     public Page<Property> getPropertiesByCity(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "cretedAt") String orderBy,
+            @RequestParam(defaultValue = "createdAt") String orderBy,
             @RequestParam String city
     ){
         return this.propertyService.getPropertiesByCity(page, size, orderBy, city);

@@ -19,7 +19,7 @@ public class AddressService {
         newAddress.setStreetNumber(streetNumber);
         newAddress.setZipCode(zipCode);
         newAddress.setCity(city);
-        newAddress.setProvinceOrStateCode(provinceOrStateCode);
+        newAddress.setProvinceOrState(provinceOrStateCode);
         newAddress.setCountry(country);
         return this.addressRepository.save(newAddress);
     }
@@ -32,7 +32,7 @@ public class AddressService {
         if(body.streetNumber() != null) found.setStreetNumber(body.streetNumber());
         if(body.zipCode() != null) found.setZipCode(body.zipCode());
         if(body.city() != null) found.setCity(body.city());
-        if(body.provinceOrStateCode() != null) found.setProvinceOrStateCode(body.provinceOrStateCode());
+        if(body.provinceOrState() != null) found.setProvinceOrState(body.provinceOrState());
         if (body.country() != null) found.setCountry(body.country());
         return this.addressRepository.save(found);
     }

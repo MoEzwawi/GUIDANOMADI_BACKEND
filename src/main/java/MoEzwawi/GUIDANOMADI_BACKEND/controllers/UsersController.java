@@ -97,10 +97,6 @@ public class UsersController {
     public User changeEmail(@AuthenticationPrincipal User currentUser, @RequestBody UpdateEmailDTO body){
         return this.usersService.changeEmail(currentUser, body);
     }
-    @PutMapping("/me/changePassword")
-    public void changePassword(@AuthenticationPrincipal User currentUser, @RequestBody UpdatePasswordDTO body){
-        this.usersService.changePassword(currentUser, body);
-    }
     @PostMapping("/me/upload")
     public String uploadProfilePic(@AuthenticationPrincipal User currentUser, @RequestParam("profilePic") MultipartFile profilePic) throws IOException {
         return this.usersService.uploadAvatar(currentUser,profilePic);

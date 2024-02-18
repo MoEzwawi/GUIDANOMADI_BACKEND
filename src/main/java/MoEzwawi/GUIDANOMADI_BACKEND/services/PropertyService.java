@@ -105,9 +105,13 @@ public class PropertyService {
         Property found = this.findById(id);
         this.propertyRepository.delete(found);
     }
-    public Favourite findPropertyByIdAndAddToFavourites(User currentUser, Long id){
+    public boolean isThisPropertyAmongMyFavourites(User curentUser, Long id){
+        Property found = this.findById(id);
+        return this.favouritesService.isItFavourite(curentUser, found);
+    }
+    public void findPropertyByIdAndAddToFavourites(User currentUser, Long id){
         Property fav = this.findById(id);
-        return this.favouritesService.addToFavourites(currentUser,fav);
+        this.favouritesService.addToFavourites(currentUser,fav);
     }
     public void findPropertyByIdAndRemoveFromFavourites(User currentUser, Long id){
         Property fav = this.findById(id);

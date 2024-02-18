@@ -88,4 +88,16 @@ public class PropertyController {
     public void deletePropertyListing(@PathVariable Long id){
         this.propertyService.findByIdAndDelete(id);
     }
+    @GetMapping("/{id}/favs")
+    public boolean isPropertyAmongFavourites(@AuthenticationPrincipal User currentUser ,@PathVariable Long id){
+        return this.propertyService.isThisPropertyAmongMyFavourites(currentUser, id);
+    }
+    @PutMapping("/{id}/favs")
+    public void changeFavouritePreference(@AuthenticationPrincipal User currentUser ,@PathVariable Long id){
+        if (this.propertyService.isThisPropertyAmongMyFavourites(currentUser, id)){
+            this.propertyService.findPropertyByIdAndRemoveFromFavourites(currentUser, id);
+        } else {
+            this.propertyService.findPropertyByIdAndAddToFavourites(currentUser, id);
+        }
+    }
 }

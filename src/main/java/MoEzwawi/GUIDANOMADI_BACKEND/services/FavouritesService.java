@@ -27,16 +27,12 @@ public class FavouritesService {
     public boolean isItFavourite(User currentUser, Property property){
         return this.findByUserAndProperty(currentUser, property).isPresent();
     }
-    public Favourite addToFavourites(User currentUser, Property property){
-        return this.favouritesRepository.save(new Favourite(currentUser,property));
+    public void addToFavourites(User currentUser, Property property){
+        this.favouritesRepository.save(new Favourite(currentUser,property));
     }
     public Page<Favourite> getMyFavourites(int page, int size, String orderBy, User currentUser){
         Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
         return this.favouritesRepository.findByUser(currentUser, pageable);
-    }
-    public void removeFromFavourites(Long id){
-        Favourite found = this.findById(id);
-        this.favouritesRepository.delete(found);
     }
     public void removeFromFavourites(User currentUser, Property property){
         if (this.findByUserAndProperty(currentUser, property).isPresent()){

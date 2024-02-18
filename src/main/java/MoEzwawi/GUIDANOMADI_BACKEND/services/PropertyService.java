@@ -84,6 +84,10 @@ public class PropertyService {
         Property found = this.findById(id);
         return this.imageService.findByProperty(found);
     }
+    public boolean canIEditTheCurrentProperty(User currentUser, Long id){
+        Property found = this.findById(id);
+        return found.getListedBy() == currentUser;
+    }
     public Property findByIdAndUpdate(Long id, UpdatePropertyDTO body){
         Property found = this.findById(id);
         if (body.title() != null) found.setTitle(body.title());

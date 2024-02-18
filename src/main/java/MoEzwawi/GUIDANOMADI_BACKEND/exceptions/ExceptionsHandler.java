@@ -26,6 +26,11 @@ public class ExceptionsHandler {
     public ErrorsDTO handleAccessDenied(AccessDeniedException ex) {
         return new ErrorsDTO("Your current role does not grant access to this functionality.", LocalDateTime.now());
     }
+    @ExceptionHandler(NotYourPropertyException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN) // status code 403
+    public ErrorsDTO handleNotYourProperty(NotYourPropertyException ex){
+        return new ErrorsDTO("This property is listed by an other user, you're not allowed to edit it nor delete it!", LocalDateTime.now());
+    }
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND) // status code 404
     public ErrorsDTO handleNotFound(NotFoundException ex) {

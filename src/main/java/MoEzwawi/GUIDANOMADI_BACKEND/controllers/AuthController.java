@@ -31,7 +31,6 @@ public class AuthController {
     @PostMapping("/login")
     public UserLoginResponseDTO login(@RequestBody @Validated UserLoginDTO body) {
         String accessToken = this.authService.authenticateUser(body);
-        User user = this.authService.findByEmail(body.email());
         return new UserLoginResponseDTO(
                 accessToken
         );

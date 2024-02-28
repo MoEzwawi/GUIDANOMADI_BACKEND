@@ -32,7 +32,7 @@ public class PropertyService {
     private UsersService usersService;
     public Page<Property> getAllProperties(int page, int size, String orderBy) {
         if (size > 100) size = 100;
-        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy).descending());
         return this.propertyRepository.findAll(pageable);
     }
     public Page<Property> getPropertiesByOwner(int page, int size, String orderBy, User owner){

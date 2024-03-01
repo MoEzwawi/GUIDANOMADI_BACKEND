@@ -10,8 +10,9 @@ er_diagram
 
 Learn more about the APIs, by going to {SERVER PORT}/swagger-ui.html on your web browser, while running the server.
 <br/>
-<br/>
 For example ->  http://localhost:8080/swagger-ui.html
+<br/>
+<br/>
 
 LINK TO THE FRONT-END REPO 💻
 https://github.com/MoEzwawi/GUIDANOMADI_FRONTEND

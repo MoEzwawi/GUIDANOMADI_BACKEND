@@ -69,4 +69,8 @@ public class ImageService {
         newThumbnail.setThumbnail();
         return this.imageRepository.save(newThumbnail);
     }
+    public void deleteImagesByProperty(Property property){
+        List<Image> toBeDeleted = this.imageRepository.findByProperty(property);
+        if(!toBeDeleted.isEmpty()) this.imageRepository.deleteAll(toBeDeleted);
+    }
 }

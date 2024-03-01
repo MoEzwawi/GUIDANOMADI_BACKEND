@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,5 +40,9 @@ public class FavouritesService {
             Favourite found = this.findByUserAndProperty(currentUser, property).get();
             this.favouritesRepository.delete(found);
         }
+    }
+    public void deleteRecordsByProperty(Property property){
+        List<Favourite> toBeDeleted = this.favouritesRepository.findByProperty(property);
+        if(!toBeDeleted.isEmpty()) this.favouritesRepository.deleteAll(toBeDeleted);
     }
 }

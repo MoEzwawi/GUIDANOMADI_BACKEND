@@ -108,6 +108,8 @@ public class PropertyService {
     }
     public void findByIdAndDelete(Long id){
         Property found = this.findById(id);
+        this.favouritesService.deleteRecordsByProperty(found);
+        this.imageService.deleteImagesByProperty(found);
         this.propertyRepository.delete(found);
     }
     public boolean isThisPropertyAmongMyFavourites(User curentUser, Long id){

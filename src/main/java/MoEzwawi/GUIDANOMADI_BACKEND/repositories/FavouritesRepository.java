@@ -13,6 +13,7 @@ import java.util.Optional;
 
 @Repository
 public interface FavouritesRepository extends JpaRepository<Favourite,Long> {
+    List<Favourite> findByProperty(Property property);
     Optional<Favourite> findByUserAndProperty(User user, Property property);
     Page<Favourite> findByUser(User user, Pageable pageable);
 }

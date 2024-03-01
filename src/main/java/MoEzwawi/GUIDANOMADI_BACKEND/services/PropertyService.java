@@ -1,6 +1,7 @@
 package MoEzwawi.GUIDANOMADI_BACKEND.services;
 
 import MoEzwawi.GUIDANOMADI_BACKEND.entities.*;
+import MoEzwawi.GUIDANOMADI_BACKEND.entities.enums.ListingType;
 import MoEzwawi.GUIDANOMADI_BACKEND.exceptions.NotFoundException;
 import MoEzwawi.GUIDANOMADI_BACKEND.payloads.properties.NewPropertyDTO;
 import MoEzwawi.GUIDANOMADI_BACKEND.payloads.properties.NewPropertyResponseDTO;
@@ -32,8 +33,20 @@ public class PropertyService {
     private UsersService usersService;
     public Page<Property> getAllProperties(int page, int size, String orderBy) {
         if (size > 100) size = 100;
-        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy).descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy).ascending());
         return this.propertyRepository.findAll(pageable);
+    }
+    public Page<Property> getPropertiesByCountry(int page, int size, String orderBy, String country){
+        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
+        return this.propertyRepository.findByAddress_Country(country,pageable);
+    }
+    public Page<Property> getPropertiesByCity(int page, int size, String orderBy, String city){
+        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
+        return this.propertyRepository.findByAddress_City(city,pageable);
+    }
+    public Page<Property> getPropertiesByListingType(int page, int size, String orderBy, ListingType listingType){
+        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
+        return this.propertyRepository.findByListingType(listingType,pageable);
     }
     public Page<Property> getPropertiesByOwner(int page, int size, String orderBy, User owner){
         Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
@@ -55,14 +68,7 @@ public class PropertyService {
         List<Property> propertyList = favPage.stream().map(Favourite::getProperty).toList();
         return new PageImpl<>(propertyList, favPage.getPageable(), favPage.getTotalElements());
     }
-    public Page<Property> getPropertiesByCountry(int page, int size, String orderBy, String country){
-        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
-        return this.propertyRepository.findByAddress_Country(country,pageable);
-    }
-    public Page<Property> getPropertiesByCity(int page, int size, String orderBy, String city){
-        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
-        return this.propertyRepository.findByAddress_City(city,pageable);
-    }
+
     public NewPropertyResponseDTO saveNewProperty(NewPropertyDTO body, User currentUser){
         Address propertyAddress = this.addressService.save(body.street(),
                 body.streetNumber(), body.zipCode(), body.city(),

@@ -2,6 +2,7 @@ package MoEzwawi.GUIDANOMADI_BACKEND.repositories;
 
 import MoEzwawi.GUIDANOMADI_BACKEND.entities.Property;
 import MoEzwawi.GUIDANOMADI_BACKEND.entities.User;
+import MoEzwawi.GUIDANOMADI_BACKEND.entities.enums.ListingType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,4 +18,5 @@ public interface PropertyRepository extends JpaRepository<Property,Long> {
     Page<Property> findByAddress_Country(String country, Pageable pageable);
     @Query("SELECT p FROM Property p WHERE LOWER(p.address.city) = LOWER(:city)")
     Page<Property> findByAddress_City(String city, Pageable pageable);
+    Page<Property> findByListingType(ListingType listingType, Pageable pageable);
 }

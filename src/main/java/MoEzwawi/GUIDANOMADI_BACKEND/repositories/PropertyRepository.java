@@ -16,7 +16,16 @@ public interface PropertyRepository extends JpaRepository<Property,Long> {
     Page<Property> findByUser(User user, Pageable pageable);
     @Query("SELECT p FROM Property p WHERE LOWER(p.address.country) = LOWER(:country)")
     Page<Property> findByAddress_Country(String country, Pageable pageable);
-    @Query("SELECT p FROM Property p WHERE LOWER(p.address.city) = LOWER(:city)")
+    @Query("SELECT p FROM Property p WHERE LOWER(p.address.city) LIKE LOWER(CONCAT('%', :city, '%'))")
     Page<Property> findByAddress_City(String city, Pageable pageable);
+    @Query("SELECT p FROM Property p WHERE p.listingType = :listingType")
     Page<Property> findByListingType(ListingType listingType, Pageable pageable);
+    @Query("SELECT p FROM Property p WHERE LOWER(p.address.country) = LOWER(:country) AND LOWER(p.address.city) LIKE LOWER(CONCAT('%', :city, '%'))")
+    Page<Property> findByCountryAndCity(String country, String city, Pageable pageable);
+    @Query("SELECT p FROM Property p WHERE LOWER(p.address.country) = LOWER(:country) AND p.listingType = :listingType")
+    Page<Property> findByCountryAndListingType(String country, ListingType listingType, Pageable pageable);
+    @Query("SELECT p FROM Property p WHERE LOWER(p.address.city) LIKE LOWER(CONCAT('%', :city, '%')) AND p.listingType = :listingType")
+    Page<Property> findByCityAndListingType(String city, ListingType listingType, Pageable pageable);
+    @Query("SELECT p FROM Property p WHERE LOWER(p.address.country) = LOWER(:country) AND LOWER(p.address.city) LIKE LOWER(CONCAT('%', :city, '%')) AND p.listingType = :listingType")
+    Page<Property> findByCountryAndCityAndType(String country, String city, ListingType listingType, Pageable pageable);
 }

@@ -31,22 +31,44 @@ public class PropertyService {
     private FavouritesService favouritesService;
     @Autowired
     private UsersService usersService;
-    public Page<Property> getAllProperties(int page, int size, String orderBy) {
+    public Page<Property> getProperties(int page, int size, String orderBy, String country, String city, ListingType listingType){
         if (size > 100) size = 100;
-        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy).ascending());
-        return this.propertyRepository.findAll(pageable);
-    }
-    public Page<Property> getPropertiesByCountry(int page, int size, String orderBy, String country){
-        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
-        return this.propertyRepository.findByAddress_Country(country,pageable);
-    }
-    public Page<Property> getPropertiesByCity(int page, int size, String orderBy, String city){
-        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
-        return this.propertyRepository.findByAddress_City(city,pageable);
-    }
-    public Page<Property> getPropertiesByListingType(int page, int size, String orderBy, ListingType listingType){
-        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
-        return this.propertyRepository.findByListingType(listingType,pageable);
+        Sort.Direction direction = Sort.Direction.ASC;
+        if (orderBy.endsWith("_desc")) {
+            direction = Sort.Direction.DESC;
+            orderBy = orderBy.substring(0, orderBy.lastIndexOf("_desc"));
+        }
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, orderBy));
+        String filterStatus =
+                ((country != null) ? "1" : "0") +
+                ((city != null) ? "1" : "0") +
+                ((listingType != null) ? "1" : "0");
+        switch(filterStatus){
+            case "100" ->{
+                return this.propertyRepository.findByAddress_Country(country,pageable);
+            }
+            case "010" -> {
+                return this.propertyRepository.findByAddress_City(city,pageable);
+            }
+            case "001" -> {
+                return this.propertyRepository.findByListingType(listingType,pageable);
+            }
+            case "110" -> {
+                return this.propertyRepository.findByCountryAndCity(country, city, pageable);
+            }
+            case "101" -> {
+                return this.propertyRepository.findByCountryAndListingType(country, listingType, pageable);
+            }
+            case "011" -> {
+                return this.propertyRepository.findByCityAndListingType(city, listingType, pageable);
+            }
+            case "111" -> {
+                return this.propertyRepository.findByCountryAndCityAndType(country, city, listingType, pageable);
+            }
+            default -> {
+                return this.propertyRepository.findAll(pageable);
+            }
+        }
     }
     public Page<Property> getPropertiesByOwner(int page, int size, String orderBy, User owner){
         Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));

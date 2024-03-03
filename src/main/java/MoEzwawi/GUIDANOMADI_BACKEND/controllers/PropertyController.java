@@ -4,6 +4,7 @@ import MoEzwawi.GUIDANOMADI_BACKEND.entities.Address;
 import MoEzwawi.GUIDANOMADI_BACKEND.entities.Image;
 import MoEzwawi.GUIDANOMADI_BACKEND.entities.Property;
 import MoEzwawi.GUIDANOMADI_BACKEND.entities.User;
+import MoEzwawi.GUIDANOMADI_BACKEND.entities.enums.ListingType;
 import MoEzwawi.GUIDANOMADI_BACKEND.exceptions.NotYourPropertyException;
 import MoEzwawi.GUIDANOMADI_BACKEND.payloads.properties.*;
 import MoEzwawi.GUIDANOMADI_BACKEND.services.PropertyService;
@@ -22,31 +23,17 @@ public class PropertyController {
     @Autowired
     private PropertyService propertyService;
     @GetMapping
-    public Page<Property> getAllProperties(
+    public Page<Property> getProperties(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "createdAt") String orderBy
-    ){
-        return this.propertyService.getAllProperties(page, size, orderBy);
+            @RequestParam(defaultValue = "availableFrom") String orderBy,
+            @RequestParam(required = false) String country,
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false) ListingType listingType
+            ){
+        return this.propertyService.getProperties(page, size, orderBy, country, city, listingType);
     }
-    @GetMapping("/byCountry")
-    public Page<Property> getPropertiesByCountry(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "createdAt") String orderBy,
-            @RequestParam String country
-    ){
-        return this.propertyService.getPropertiesByCountry(page, size, orderBy, country);
-    }
-    @GetMapping("/byCity")
-    public Page<Property> getPropertiesByCity(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "createdAt") String orderBy,
-            @RequestParam String city
-    ){
-        return this.propertyService.getPropertiesByCity(page, size, orderBy, city);
-    }
+
     @PostMapping
     public NewPropertyResponseDTO addPropertyListing(
             @RequestBody NewPropertyDTO body,

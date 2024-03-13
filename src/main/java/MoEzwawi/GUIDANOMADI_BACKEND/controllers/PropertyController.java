@@ -6,6 +6,7 @@ import MoEzwawi.GUIDANOMADI_BACKEND.entities.Property;
 import MoEzwawi.GUIDANOMADI_BACKEND.entities.User;
 import MoEzwawi.GUIDANOMADI_BACKEND.entities.enums.ListingType;
 import MoEzwawi.GUIDANOMADI_BACKEND.exceptions.NotYourPropertyException;
+import MoEzwawi.GUIDANOMADI_BACKEND.payloads.images.ImageUrlDTO;
 import MoEzwawi.GUIDANOMADI_BACKEND.payloads.properties.*;
 import MoEzwawi.GUIDANOMADI_BACKEND.services.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;

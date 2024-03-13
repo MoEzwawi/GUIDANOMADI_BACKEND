@@ -4,8 +4,6 @@ import MoEzwawi.GUIDANOMADI_BACKEND.exceptions.BadRequestException;
 import jakarta.validation.constraints.NotNull;
 
 public record UpdatePostDTO(
-        @NotNull(message = "Please provide the post ID.")
-        Long postId,
         String text,
         String imageUrl
 ) {

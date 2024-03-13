@@ -29,7 +29,12 @@ public class ExceptionsHandler {
     @ExceptionHandler(NotYourPropertyException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN) // status code 403
     public ErrorsDTO handleNotYourProperty(NotYourPropertyException ex){
-        return new ErrorsDTO("This property is listed by an other user, you're not allowed to edit it nor delete it!", LocalDateTime.now());
+        return new ErrorsDTO("This property is listed by another user, you're not allowed to edit it nor delete it!", LocalDateTime.now());
+    }
+    @ExceptionHandler(NotYourPostException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN) // status code 403
+    public ErrorsDTO handleNotYourPost(NotYourPostException ex){
+        return new ErrorsDTO("This post was submitted by another, you're not allowed to edit it nor delete it!", LocalDateTime.now());
     }
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND) // status code 404

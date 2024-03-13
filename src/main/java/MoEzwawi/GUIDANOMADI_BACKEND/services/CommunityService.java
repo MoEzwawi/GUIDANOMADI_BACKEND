@@ -4,6 +4,7 @@ import MoEzwawi.GUIDANOMADI_BACKEND.entities.Comment;
 import MoEzwawi.GUIDANOMADI_BACKEND.entities.Post;
 import MoEzwawi.GUIDANOMADI_BACKEND.entities.User;
 import MoEzwawi.GUIDANOMADI_BACKEND.exceptions.NotFoundException;
+import MoEzwawi.GUIDANOMADI_BACKEND.exceptions.NotYourCommentException;
 import MoEzwawi.GUIDANOMADI_BACKEND.exceptions.NotYourPostException;
 import MoEzwawi.GUIDANOMADI_BACKEND.payloads.comments.NewCommentDTO;
 import MoEzwawi.GUIDANOMADI_BACKEND.payloads.posts.NewPostDTO;
@@ -27,7 +28,7 @@ public class CommunityService {
     @Autowired
     private CommentsRepository commentsRepository;
     public Page<Post> getPosts(int pageNumber, int size, String directionString){
-        Sort.Direction direction = Objects.equals(directionString, "DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort.Direction direction = Objects.equals(directionString, "ASC") ? Sort.Direction.ASC : Sort.Direction.DESC;
         Pageable pageable = PageRequest.of(pageNumber, size, Sort.by(direction,"createdAt"));
         return this.postsRepository.findAll(pageable);
     }
@@ -62,20 +63,24 @@ public class CommunityService {
         this.deleteCommentsByPost(found);
         this.postsRepository.delete(found);
     }
-    public Page<Comment> getCommentsByPost(Post post, int pageNumber, int size){
-        Pageable pageable = PageRequest.of(pageNumber, size);
-        return this.commentsRepository.findByPost(post, pageable);
+    public Page<Comment> getCommentsByPost(long postId, int pageNumber, int size){
+        Post found = this.getPostById(postId);
+        Pageable pageable = PageRequest.of(pageNumber, size, Sort.by(Sort.Direction.DESC,"createdAt"));
+        return this.commentsRepository.findByPost(found, pageable);
+    }
+    public Comment addNewComment(long postId, NewCommentDTO body, User currentUser){
+        Post found = this.postsRepository.findById(postId).orElseThrow(() ->new NotFoundException(postId));
+        Comment newComment = new Comment(body.text(), found, currentUser);
+        return this.commentsRepository.save(newComment);
     }
     public Comment getCommentById(long id){
         return this.commentsRepository.findById(id).orElseThrow(()-> new NotFoundException(id));
     }
-    public void deleteCommentById(long id){
+    public void deleteCommentById(User currentUser, long id){
         Comment found = this.getCommentById(id);
+        if(!Objects.equals(currentUser.getId(),found.getCommentedBy().getId())){
+            throw new NotYourCommentException();
+        }
         this.commentsRepository.delete(found);
-    }
-    public Comment addNewComment(NewCommentDTO body, User currentUser){
-        Post found = this.postsRepository.findById(body.postId()).orElseThrow(() ->new NotFoundException(body.postId()));
-        Comment newComment = new Comment(body.text(), found, currentUser);
-        return this.commentsRepository.save(newComment);
     }
 }

@@ -34,7 +34,12 @@ public class ExceptionsHandler {
     @ExceptionHandler(NotYourPostException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN) // status code 403
     public ErrorsDTO handleNotYourPost(NotYourPostException ex){
-        return new ErrorsDTO("This post was submitted by another, you're not allowed to edit it nor delete it!", LocalDateTime.now());
+        return new ErrorsDTO("This post was submitted by another user, you're not allowed to edit it nor delete it!", LocalDateTime.now());
+    }
+    @ExceptionHandler(NotYourCommentException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN) // status code 403
+    public ErrorsDTO handleNotYourComment(NotYourCommentException ex){
+        return new ErrorsDTO("This comment was submitted by another user, you're not allowed to delete it!", LocalDateTime.now());
     }
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND) // status code 404
